@@ -1,9 +1,13 @@
 package com.kzai.flixster;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.kzai.flixster.adapters.MoviesAdapter;
@@ -28,11 +32,13 @@ public class MoviesActivity extends AppCompatActivity {
     private SwipeRefreshLayout swipeContainer;
     private AsyncHttpClient client;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movies);
+
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getSupportActionBar().setCustomView(R.layout.actionbar_title);
 
         movies = new ArrayList<Movie>();
         lvMovies = (ListView) findViewById(R.id.lvMovies);
@@ -41,6 +47,7 @@ public class MoviesActivity extends AppCompatActivity {
 
         setUpRefresh();
         getJSONResults();
+        setupListeners();
     }
 
     private void setUpRefresh() {
@@ -55,7 +62,6 @@ public class MoviesActivity extends AppCompatActivity {
                 // Make sure you call swipeContainer.setRefreshing(false)
                 // once the network request has completed successfully.
                 getJSONResults();
-                //fetchTimelineAsync(0);
             }
         });
 
@@ -64,10 +70,6 @@ public class MoviesActivity extends AppCompatActivity {
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
-    }
-
-    public void fetchTimelineAsync(int page) {
-        // Send the network request to fetch the updated data
     }
 
     private void getJSONResults() {
@@ -83,14 +85,7 @@ public class MoviesActivity extends AppCompatActivity {
                     movies.clear();
                     movies.addAll(Movie.fromJSONArray(movieJsonResults));
 
-                    // Remember to CLEAR OUT old items before appending in the new ones
-                    //movieAdapter.clear();
-
-                    // ...the data has come back, add new items to your adapter...
-                    //adapter.addAll(...);
-
                     // Now we call setRefreshing(false) to signal refresh has finished
-
                     swipeContainer.setRefreshing(false);
 
                     movieAdapter.notifyDataSetChanged();
@@ -103,6 +98,24 @@ public class MoviesActivity extends AppCompatActivity {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
+            }
+        });
+    }
+
+    private void setupListeners() {
+        lvMovies.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // first parameter is the context, second is the class of the activity to launch
+                Intent i = new Intent(MoviesActivity.this, MovieDetailsActivity.class);
+                // put "extras" into the bundle for access in the second activity
+                Movie selectedMovie = movies.get(position);
+                i.putExtra("title", selectedMovie.getOriginalTitle());
+                i.putExtra("backdrop", selectedMovie.getBackdropPath());
+                i.putExtra("overview", selectedMovie.getOverview());
+                i.putExtra("voteAverage", selectedMovie.getVoteAverage());
+                // brings up the second activity
+                startActivity(i);
             }
         });
     }

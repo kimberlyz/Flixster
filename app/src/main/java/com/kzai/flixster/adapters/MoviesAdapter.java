@@ -19,6 +19,7 @@ import java.util.List;
  * Created by kzai on 6/15/16.
  */
 public class MoviesAdapter extends ArrayAdapter<Movie> {
+
     // View lookup cache
     private static class ViewHolder {
         TextView title;
@@ -55,57 +56,20 @@ public class MoviesAdapter extends ArrayAdapter<Movie> {
         boolean isLandscape = getContext().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
 
         if (isLandscape) {
-            Picasso.with(getContext()).load(movie.getBackdropPath()).into(viewHolder.image);
+            //Picasso.with(getContext()).load(movie.getBackdropPath()).into(viewHolder.image);
+            Picasso.with(getContext()).load(movie.getBackdropPath()).resize(600,300).centerCrop()
+                    .placeholder(R.drawable.movielandscape)
+                    .error(R.drawable.movielandscape)
+                    .into(viewHolder.image);
         } else {
-            Picasso.with(getContext()).load(movie.getPosterPath()).into(viewHolder.image);
+            //Picasso.with(getContext()).load(movie.getPosterPath()).into(viewHolder.image);
+            Picasso.with(getContext()).load(movie.getPosterPath()).resize(400,600).centerCrop()
+                    .placeholder(R.drawable.movieportrait)
+                    .error(R.drawable.movieportrait)
+                    .into(viewHolder.image);
         }
-
-        //Picasso.with(getContext()).load(movie.getPosterPath()).into(viewHolder.image);
-
-        /*
-        // Find the image view
-        ImageView ivImage = (ImageView) convertView.findViewById(R.id.ivMovieImage);
-
-        // Clear out image from convertView
-        ivImage.setImageResource(0);
-
-        TextView tvTitle = (TextView) convertView.findViewById(R.id.tvTitle);
-        TextView tvOverview = (TextView) convertView.findViewById(R.id.tvOverview);
-
-        // Populate data
-        tvTitle.setText(movie.getOriginalTitle());
-        tvOverview.setText(movie.getOverview());
-
-         Picasso.with(getContext()).load(movie.getPosterPath()).into(ivImage); */
 
         // Return the completed view to render on screen
         return convertView;
     }
-
-    /*
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        // Get the data item for this position
-        Movie movie = getItem(position);
-
-        // Check if an existing view is being reused, otherwise inflate the view
-        if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_movie, parent, false);
-        }
-
-        // Lookup view for data population
-        TextView tvTitle = (TextView) convertView.findViewById(R.id.tvTitle);
-        ImageView ivPoster = (ImageView) convertView.findViewById(R.id.ivPoster);
-
-        // Populate the data into the template view using the data object
-        tvTitle.setText(movie.title);
-
-        Log.d("MoviesAdapter", "Position: " + position);
-
-        String imageUri = "https://i.imgur.com/tGbaZCY.jpg";
-        Picasso.with(getContext()).load(imageUri).into(ivPoster);
-
-        // Return the completed view to render on screen
-        return convertView;
-    } */
 }
