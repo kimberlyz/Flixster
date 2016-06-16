@@ -114,6 +114,7 @@ public class MoviesActivity extends AppCompatActivity {
                 i.putExtra("backdrop", selectedMovie.getBackdropPath());
                 i.putExtra("overview", selectedMovie.getOverview());
                 i.putExtra("voteAverage", selectedMovie.getVoteAverage());
+
                 // brings up the second activity
                 startActivity(i);
             }
