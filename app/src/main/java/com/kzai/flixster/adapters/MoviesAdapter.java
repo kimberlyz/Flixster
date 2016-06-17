@@ -57,7 +57,7 @@ public class MoviesAdapter extends ArrayAdapter<Movie> {
 
         boolean isLandscape = getContext().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
 
-        if (isLandscape) {
+            if (isLandscape) {
             //Picasso.with(getContext()).load(movie.getBackdropPath()).into(viewHolder.image);
             Picasso.with(getContext()).load(movie.getBackdropPath()).resize(600,300).centerCrop().transform(new RoundedCornersTransformation(10, 10))
                     .placeholder(R.drawable.movielandscape)
